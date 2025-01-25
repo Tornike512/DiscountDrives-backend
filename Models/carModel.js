@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const carSchema = mongoose.Schema(
+const carSchema = new mongoose.Schema(
   {
     carModel: String,
     carLink: String,

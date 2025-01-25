@@ -29,6 +29,12 @@ export const scrapeWithPuppeteer = async () => {
           "N/A",
         price:
           div.querySelector(".flex.items-center.undefined")?.innerText || "N/A",
+        year:
+          div.querySelector(
+            ".mr-\\[8px\\].ml-\\[0px\\].md\\:ml-\\[8px\\].flex.text-\\[\\#8996ae\\].font-medium.whitespace-nowrap"
+          )?.innerText || "N/A",
+        link:
+          div.querySelector("a.line-clamp-1.text-raisin-100")?.href || "N/A",
       }));
     });
 
