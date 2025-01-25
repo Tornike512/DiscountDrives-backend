@@ -10,22 +10,32 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 app.get("/", async (req, res) => {
-  const cars = await scrapeWithPuppeteer();
-
-  const formattedCars = cars.map((car) => ({
-    carModel: car.title,
-    carLink: car.link,
-    carYear: car.year,
-    carPrice: car.price,
-  }));
-
-  await carModel.insertMany(formattedCars);
-
+  const cars = await carModel.find();
   if (!cars) {
-    return res.status(400).json({ message: "Error loading cars" });
+    return res.status(404).json({ message: "No cars were found" });
   }
-
   res.status(200).json({ cars });
+});
+
+app.post("/", async (req, res) => {
+  try {
+    const cars = await scrapeWithPuppeteer();
+
+    const formattedCars = cars.map((car) => ({
+      carModel: car.title,
+      carLink: car.link,
+      carYear: car.year,
+      carPrice: car.price,
+    }));
+
+    await carModel.insertMany(formattedCars);
+
+    res.status(200).json({ cars });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Error loading cars", error: error.message });
+  }
 });
 
 try {
