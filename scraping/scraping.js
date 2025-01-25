@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 const url =
-  "https://www.myauto.ge/ka/s/iyideba-manqanebi?0=page&vehicleType=0&bargainType=0&mansNModels=&priceTo=10000&currId=3&mileageType=1&locations=2&customs=1&sort=1&page=1&layoutId=1";
+  "https://www.myauto.ge/ka/s/iyideba-manqanebi?0=page&vehicleType=0&bargainType=0&mansNModels=&priceFrom=900&priceTo=10000&currId=1&mileageType=1&locations=2&customs=1&sort=1&page=1&layoutId=1";
 
 export const scrapeWithPuppeteer = async () => {
   let browser;
@@ -32,7 +32,6 @@ export const scrapeWithPuppeteer = async () => {
       }));
     });
 
-    console.log(cars);
     return cars;
   } catch (error) {
     console.error("Scraping error:", error);
