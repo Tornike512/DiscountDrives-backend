@@ -26,6 +26,7 @@ app.post("/", async (req, res) => {
       carLink: car.link,
       carYear: car.year,
       carPrice: car.price,
+      carImage: car.imageUrl,
     }));
 
     await carModel.insertMany(formattedCars);

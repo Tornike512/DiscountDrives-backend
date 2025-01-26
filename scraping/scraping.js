@@ -35,6 +35,7 @@ export const scrapeWithPuppeteer = async () => {
           )?.innerText || "N/A",
         link:
           div.querySelector("a.line-clamp-1.text-raisin-100")?.href || "N/A",
+        imageUrl: div.querySelector(".items__image")?.src || "N/A",
       }));
     });
 
