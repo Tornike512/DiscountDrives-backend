@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const carSchema = new mongoose.Schema(
   {
     carModel: String,
-    carLink: String,
+    carLink: { type: String, unique: true },
     carYear: String,
     carPrice: String,
     carImage: String,

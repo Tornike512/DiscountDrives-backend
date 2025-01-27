@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import carModel from "../Models/carModel.js";
 
 const url =
   "https://www.myauto.ge/ka/s/iyideba-manqanebi?0=page&vehicleType=0&bargainType=0&mansNModels=&priceFrom=900&priceTo=10000&currId=1&mileageType=1&locations=2&customs=1&sort=1&page=1&layoutId=1";
@@ -39,7 +40,22 @@ export const scrapeWithPuppeteer = async () => {
       }));
     });
 
-    return cars;
+    try {
+      const result = await carModel.insertMany(formattedCars, {
+        ordered: false,
+        ordered: false,
+      });
+
+      console.log(`Successfully inserted ${result.length} new cars`);
+    } catch (error) {
+      if (error.writeErrors) {
+        console.log(
+          `Inserted ${error.insertedDocs.length} cars, ${error.writeErrors.length} duplicates skipped`
+        );
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
+    }
   } catch (error) {
     console.error("Scraping error:", error);
     throw error;
@@ -47,5 +63,3 @@ export const scrapeWithPuppeteer = async () => {
     if (browser) await browser.close();
   }
 };
-
-scrapeWithPuppeteer().catch(console.error);
