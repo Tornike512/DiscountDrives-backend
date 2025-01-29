@@ -34,7 +34,7 @@ const startServer = async () => {
         } catch (error) {
           console.error("Scheduled scrape failed:", error);
         }
-      }, 10000);
+      }, 20000);
     });
   } catch (error) {
     console.error("Server startup failed:", error);

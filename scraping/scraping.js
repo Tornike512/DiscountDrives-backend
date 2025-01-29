@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 import carModel from "../Models/carModel.js";
+import { sendCarNotification } from "../utils/telegramMessage.js";
 
 const url =
   "https://www.myauto.ge/ka/s/iyideba-manqanebi?0=page&vehicleType=0&bargainType=0&mansNModels=&priceFrom=900&priceTo=10000&currId=1&mileageType=1&locations=2&customs=1&sort=1&page=1&layoutId=1";
@@ -7,7 +8,11 @@ const url =
 export const scrapeWithPuppeteer = async () => {
   let browser;
   try {
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      timeout: 120000,
+    });
     const page = await browser.newPage();
 
     await page.setUserAgent(
@@ -15,8 +20,8 @@ export const scrapeWithPuppeteer = async () => {
     );
 
     await page.goto(url, {
-      waitUntil: "networkidle0",
-      timeout: 60000,
+      waitUntil: "networkidle2",
+      timeout: 120000,
     });
 
     const cars = await page.evaluate(() => {
@@ -53,14 +58,18 @@ export const scrapeWithPuppeteer = async () => {
         ordered: false,
       });
 
-      console.log(`Successfully inserted ${result.length} new cars`);
+      if (result.length <= 0) {
+        await sendCarNotification(result);
+        console.log(
+          `Successfully inserted ${result.length} new cars and sent notification`
+        );
+      }
     } catch (error) {
-      if (error.writeErrors) {
+      if (error.writeErrors && error.insertedDocs.length > 0) {
+        await sendCarNotification(error.insertedDocs);
         console.log(
           `Inserted ${error.insertedDocs.length} cars, ${error.writeErrors.length} duplicates skipped`
         );
-      } else {
-        console.error("An unexpected error occurred:", error);
       }
     }
   } catch (error) {
