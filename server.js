@@ -18,14 +18,28 @@ app.get("/", async (req, res) => {
   res.status(200).json({ cars });
 });
 
-try {
-  await mongoose.connect(process.env.MONGO_URL);
-  app.listen(PORT, async () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-} catch (error) {
-  console.log(error, "Error connecting to MongoDB");
-  process.exit(1);
-}
+const startServer = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
 
-await scrapeWithPuppeteer();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+
+      scrapeWithPuppeteer().catch(console.error);
+
+      setInterval(async () => {
+        try {
+          await scrapeWithPuppeteer();
+          console.log("Scheduled scrape completed");
+        } catch (error) {
+          console.error("Scheduled scrape failed:", error);
+        }
+      }, 10000);
+    });
+  } catch (error) {
+    console.error("Server startup failed:", error);
+    process.exit(1);
+  }
+};
+
+startServer();

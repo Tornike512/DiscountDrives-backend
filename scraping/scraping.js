@@ -40,9 +40,16 @@ export const scrapeWithPuppeteer = async () => {
       }));
     });
 
+    const formattedCars = cars.map((car) => ({
+      carModel: car.title,
+      carPrice: car.price,
+      carYear: car.year,
+      carLink: car.link,
+      carImage: car.imageUrl,
+    }));
+
     try {
       const result = await carModel.insertMany(formattedCars, {
-        ordered: false,
         ordered: false,
       });
 
