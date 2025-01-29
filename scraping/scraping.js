@@ -9,15 +9,15 @@ export const scrapeWithPuppeteer = async () => {
   let browser;
   try {
     browser = await puppeteer.launch({
+      timeout: 120000,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
-        "--disable-accelerated-2d-canvas",
-        "--disable-gpu",
+        "--single-process",
       ],
-      headless: true,
-      timeout: 120000,
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+      headless: "new",
     });
     const page = await browser.newPage();
 
