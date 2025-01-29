@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "echo 'Build step completed'"
+    "build": "npm install && npx puppeteer browsers install chrome"
   },
   "keywords": [],
   "author": "",
