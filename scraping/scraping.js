@@ -16,8 +16,7 @@ export const scrapeWithPuppeteer = async () => {
         "--disable-dev-shm-usage",
         "--single-process",
       ],
-      executablePath:
-        process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser",
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
       headless: "new",
     });
     const page = await browser.newPage();
