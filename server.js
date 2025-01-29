@@ -4,11 +4,13 @@ import express from "express";
 import { scrapeWithPuppeteer } from "./scraping/scraping.js";
 import carModel from "./Models/carModel.js";
 import mongoose from "mongoose";
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", async (req, res) => {
   const cars = await carModel.find();
@@ -34,7 +36,7 @@ const startServer = async () => {
         } catch (error) {
           console.error("Scheduled scrape failed:", error);
         }
-      }, 20000);
+      }, 10000);
     });
   } catch (error) {
     console.error("Server startup failed:", error);
