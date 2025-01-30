@@ -2,12 +2,12 @@ services:
   - type: web
     name: myauto-scraper
     env: node
-    buildCommand: npm ci 
+    buildCommand: npm ci
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PUPPETEER_EXECUTABLE_PATH  # Add this for your scraping code
+      - key: PUPPETEER_EXECUTABLE_PATH  # Updated this value
         value: /usr/bin/chromium
     build:
       commands:
@@ -15,7 +15,6 @@ services:
         - apt-get install -y chromium chromium-driver fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1
         - mkdir -p /opt/render/.cache/puppeteer
         - npm ci
-        - npm run build 
     env:
       - key: PUPPETEER_CACHE_DIR
         value: /opt/render/.cache/puppeteer

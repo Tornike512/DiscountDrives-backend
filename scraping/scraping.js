@@ -17,6 +17,7 @@ export const scrapeWithPuppeteer = async () => {
         "--disable-gpu",
         "--single-process",
       ],
+      executablePath: "/usr/bin/chromium",
       headless: "new",
     });
     const page = await browser.newPage();
