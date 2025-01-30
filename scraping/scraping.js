@@ -14,10 +14,8 @@ export const scrapeWithPuppeteer = async () => {
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
-        "--disable-gpu",
         "--single-process",
       ],
-      executablePath: "/usr/bin/chromium",
       headless: "new",
     });
     const page = await browser.newPage();
