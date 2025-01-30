@@ -14,9 +14,9 @@ export const scrapeWithPuppeteer = async () => {
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
+        "--disable-gpu",
         "--single-process",
       ],
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
       headless: "new",
     });
     const page = await browser.newPage();
