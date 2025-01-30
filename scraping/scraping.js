@@ -34,20 +34,28 @@ export const scrapeWithPuppeteer = async () => {
         ".flex.flex-col.items-start.md\\:flex-row.md\\:p-\\[16px\\].transition-opacity.duration-700.ease-in-out"
       );
 
-      return Array.from(carDivs).map((div) => ({
-        title:
-          div.querySelector(".line-clamp-1.text-raisin-100")?.innerText ||
-          "N/A",
-        price:
-          div.querySelector(".flex.items-center.undefined")?.innerText || "N/A",
-        year:
-          div.querySelector(
-            ".mr-\\[8px\\].ml-\\[0px\\].md\\:ml-\\[8px\\].flex.text-\\[\\#8996ae\\].font-medium.whitespace-nowrap"
-          )?.innerText || "N/A",
-        link:
-          div.querySelector("a.line-clamp-1.text-raisin-100")?.href || "N/A",
-        imageUrl: div.querySelector(".items__image")?.src || "N/A",
-      }));
+      return Array.from(carDivs)
+        .filter((div) => {
+          const priceLabel = div.querySelector('div[class*="bg-[#38de7a]"]');
+          const labelText = priceLabel?.textContent.replace(/\s+/g, " ").trim();
+          return labelText === "დაბალი ფასი";
+        })
+        .map((div) => ({
+          title:
+            div.querySelector(".line-clamp-1.text-raisin-100")?.innerText ||
+            "N/A",
+          price:
+            div.querySelector(".flex.items-center.undefined")?.innerText ||
+            "N/A",
+          year:
+            div.querySelector(
+              ".mr-\\[8px\\].ml-\\[0px\\].md\\:ml-\\[8px\\].flex.text-\\[\\#8996ae\\].font-medium.whitespace-nowrap"
+            )?.innerText || "N/A",
+          link:
+            div.querySelector("a.line-clamp-1.text-raisin-100")?.href || "N/A",
+          imageUrl: div.querySelector(".items__image")?.src || "N/A",
+          priceLabel: "დაბალი ფასი",
+        }));
     });
 
     const formattedCars = cars.map((car) => ({
@@ -63,7 +71,7 @@ export const scrapeWithPuppeteer = async () => {
         ordered: false,
       });
 
-      if (result.length <= 0) {
+      if (result.length > 0) {
         await sendCarNotification(result);
         console.log(
           `Successfully inserted ${result.length} new cars and sent notification`

@@ -13,11 +13,16 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", async (req, res) => {
-  const cars = await carModel.find();
-  if (!cars) {
-    return res.status(404).json({ message: "No cars were found" });
+  try {
+    const cars = await carModel.find().sort({ _id: -1 }).limit(50);
+    if (!cars || cars.length === 0) {
+      return res.status(404).json({ message: "No cars were found" });
+    }
+    res.status(200).json({ cars });
+  } catch (error) {
+    console.error("Error fetching cars:", error);
+    res.status(500).json({ message: "Server error" });
   }
-  res.status(200).json({ cars });
 });
 
 const startServer = async () => {
@@ -36,7 +41,7 @@ const startServer = async () => {
         } catch (error) {
           console.error("Scheduled scrape failed:", error);
         }
-      }, 10000);
+      }, 60000);
     });
   } catch (error) {
     console.error("Server startup failed:", error);

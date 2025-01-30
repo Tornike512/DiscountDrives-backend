@@ -7,6 +7,7 @@ const carSchema = new mongoose.Schema(
     carYear: String,
     carPrice: String,
     carImage: String,
+    priceLabel: String,
     createdAt: { type: Date, default: Date.now, expires: "7d" },
   },
   {
