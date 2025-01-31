@@ -40,7 +40,7 @@ async function sendCarNotification(cars) {
 
   cars.forEach((car, index) => {
     message += `${index + 1}. <b>${car.carModel}</b>\n`;
-    message += `💰 ${car.carPrice}\n`;
+    message += `💰 ${car.carPrice}\n$`;
     message += `📅 ${car.carYear}\n`;
     message += `🔗 <a href="${car.carLink}">View Car</a>\n\n`;
   });

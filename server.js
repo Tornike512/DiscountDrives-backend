@@ -14,7 +14,7 @@ app.use(cors());
 
 app.get("/", async (req, res) => {
   try {
-    const cars = await carModel.find().sort({ _id: -1 }).limit(50);
+    const cars = await carModel.find().sort({ _id: -1 }).limit(48);
     if (!cars || cars.length === 0) {
       return res.status(404).json({ message: "No cars were found" });
     }
