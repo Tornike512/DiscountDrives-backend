@@ -3,7 +3,7 @@ import carModel from "../Models/carModel.js";
 import { sendCarNotification } from "../utils/telegramMessage.js";
 
 const url =
-  "https://www.myauto.ge/ka/s/iyideba-manqanebi?0=page&vehicleType=0&bargainType=0&mansNModels=&priceFrom=900&priceTo=10000&currId=1&mileageType=1&locations=2&customs=1&sort=1&page=1&layoutId=1";
+  "https://www.myauto.ge/en/s/iyideba-manqanebi?0=page&vehicleType=0&bargainType=0&mansNModels=&priceFrom=900&priceTo=10000&currId=1&mileageType=1&locations=2&customs=1&sort=1&page=1&layoutId=1";
 
 export const scrapeWithPuppeteer = async () => {
   let browser;
@@ -38,7 +38,7 @@ export const scrapeWithPuppeteer = async () => {
         .filter((div) => {
           const priceLabel = div.querySelector('div[class*="bg-[#38de7a]"]');
           const labelText = priceLabel?.textContent.replace(/\s+/g, " ").trim();
-          return labelText === "დაბალი ფასი";
+          return labelText === "Low Price";
         })
         .map((div) => ({
           title:
