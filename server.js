@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import { scrapeWithPuppeteer } from "./scraping/scraping.js";
-import carModel from "./Models/carModel.js";
+import router from "./Routes/CarsRoute.js";
 import mongoose from "mongoose";
 import cors from "cors";
 
@@ -12,34 +12,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-app.get("/", async (req, res) => {
-  const { firstCar, lastCar } = req.query;
-
-  try {
-    const cars = await carModel
-      .find()
-      .sort({ _id: -1 })
-      .skip(firstCar)
-      .limit(lastCar);
-
-    if (!cars || cars.length === 0) {
-      return res.status(404).json({ message: "No cars were found" });
-    }
-    res.status(200).json({ cars });
-  } catch (error) {
-    console.error("Error fetching cars:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-app.get("/page-length", async (req, res) => {
-  try {
-    const pageLength = await carModel.countDocuments();
-    res.status(200).json(pageLength);
-  } catch (error) {
-    res.status(404).json({ message: "Error Fetching Car's Count" });
-  }
-});
+app.use(router);
 
 const startServer = async () => {
   try {
