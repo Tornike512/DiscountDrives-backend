@@ -14,15 +14,38 @@ export const scrapeWithPuppeteer = async () => {
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
-        "--single-process",
+        "--disable-accelerated-2d-canvas",
+        "--disable-gpu",
+        "--js-flags=--expose-gc",
+        "--use-gl=disabled",
+        "--window-size=1280,720",
+        "--blink-settings=imagesEnabled=false",
       ],
       headless: "new",
+      defaultViewport: { width: 1280, height: 720 },
     });
+
     const page = await browser.newPage();
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     );
+
+    await page.setCacheEnabled(false);
+
+    await page.setRequestInterception(true);
+    page.on("request", (request) => {
+      const resourceType = request.resourceType();
+      if (
+        resourceType === "image" ||
+        resourceType === "font" ||
+        resourceType === "media"
+      ) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    });
 
     await page.goto(url, {
       waitUntil: "networkidle2",
@@ -58,6 +81,8 @@ export const scrapeWithPuppeteer = async () => {
         }));
     });
 
+    await page.close();
+
     const formattedCars = cars.map((car) => ({
       carModel: car.title,
       carPrice: car.price,
@@ -85,10 +110,21 @@ export const scrapeWithPuppeteer = async () => {
         );
       }
     }
+
+    console.log("Memory after scraping:", process.memoryUsage());
+
+    if (global.gc) {
+      global.gc();
+    }
+
+    return formattedCars;
   } catch (error) {
     console.error("Scraping error:", error);
     throw error;
   } finally {
-    if (browser) await browser.close();
+    if (browser) {
+      await browser.close();
+      console.log("Browser closed properly");
+    }
   }
 };
