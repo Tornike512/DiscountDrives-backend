@@ -5,20 +5,23 @@ import { scrapeWithPuppeteer } from "./scraping/scraping.js";
 import router from "./Routes/CarsRoute.js";
 import mongoose from "mongoose";
 import cors from "cors";
+import carPricesModel from "./Models/carPricesModel.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors());
-// app.get("/all-cars", async (req, res) => {
-//   const allCars = await carPricesModel.find({});
 
-//   console.log(allCars);
-
-//   res.json(allCars);
-// });
 app.use(router);
+
+// app.get("/all-cars", async (req, res) => {
+//   const cars = await carPricesModel.find({});
+
+//   console.log(cars);
+
+//   res.json({ cars });
+// });
 
 const startServer = async () => {
   try {
