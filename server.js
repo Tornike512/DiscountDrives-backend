@@ -11,7 +11,13 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors());
+// app.get("/all-cars", async (req, res) => {
+//   const allCars = await carPricesModel.find({});
 
+//   console.log(allCars);
+
+//   res.json(allCars);
+// });
 app.use(router);
 
 const startServer = async () => {
