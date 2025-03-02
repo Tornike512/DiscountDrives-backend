@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
 
-const CarModelSchemaMongoose = new mongoose.Schema({
+const CarModelSchema = new mongoose.Schema({
   model: String,
-  prices_by_year: Map,
+  prices_by_year: {
+    type: Map,
+    of: String,
+  },
 });
 
-const CarPricesSchemaMongoose = new mongoose.Schema({
-  jeep: [CarModelSchemaMongoose],
-  arcfox: [CarModelSchemaMongoose],
-  acura: [CarModelSchemaMongoose],
+const CarPricesSchema = new mongoose.Schema({
+  brand: String,
+  models: [CarModelSchema],
 });
 
-export default mongoose.model("carPrices", CarPricesSchemaMongoose);
+export default mongoose.model("carprices", CarPricesSchema);

@@ -15,14 +15,18 @@ app.use(cors());
 
 app.use(router);
 
-// app.get("/all-cars", async (req, res) => {
-//   const cars = await carPricesModel.find({});
+app.get("/all-cars", async (req, res) => {
+  try {
+    const cars = await carPricesModel.find({}).lean();
 
-//   console.log(cars);
+    console.log(cars);
 
-//   res.json({ cars });
-// });
-
+    res.json({ cars });
+  } catch (error) {
+    console.error("Error fetching cars:", error);
+    res.status(500).json({ error: "Failed to fetch car data" });
+  }
+});
 const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URL);
