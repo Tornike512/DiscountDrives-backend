@@ -15,18 +15,33 @@ app.use(cors());
 
 app.use(router);
 
-app.get("/all-cars", async (req, res) => {
-  try {
-    const cars = await carPricesModel.find({}).lean();
+// app.get("/all-cars", async (req, res) => {
+//   try {
+//     const cars = await carPricesModel.find({});
+//     const brands = await carPricesModel.distinct("brand");
+//     const model = cars
+//       .flatMap((car) => {
+//         return car.models;
+//       })
+//       .map((model) => {
+//         return model.model;
+//       });
 
-    console.log(cars);
+//     const years = cars
+//       .flatMap((car) => {
+//         return car.models;
+//       })
+//       .map((year) => {
+//         return year.prices_by_year;
+//       });
 
-    res.json({ cars });
-  } catch (error) {
-    console.error("Error fetching cars:", error);
-    res.status(500).json({ error: "Failed to fetch car data" });
-  }
-});
+//     res.json({ years });
+//   } catch (error) {
+//     console.error("Error fetching cars:", error);
+//     res.status(500).json({ error: "Failed to fetch car data" });
+//   }
+// });
+
 const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URL);

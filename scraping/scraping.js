@@ -1,9 +1,10 @@
 import puppeteer from "puppeteer";
 import carModel from "../Models/carModel.js";
+import carPricesModel from "../Models/carPricesModel.js";
 import { sendCarNotification } from "../utils/telegramMessage.js";
 
 const url =
-  "https://www.myauto.ge/en/s/iyideba-manqanebi?0=page&vehicleType=0&bargainType=0&mansNModels=&priceFrom=900&priceTo=10000&currId=1&mileageType=1&locations=2&customs=1&sort=1&page=1&layoutId=1";
+  "https://www.myauto.ge/en/s/iyideba-manqanebi?vehicleType=0&bargainType=0&mansNModels=&currId=1&mileageType=1&hideDealPrice=1&period=1h&customs=1&vinCode=1&sort=1&page=1&layoutId=1";
 
 export const scrapeWithPuppeteer = async () => {
   let browser;
@@ -58,6 +59,7 @@ export const scrapeWithPuppeteer = async () => {
       );
 
       return Array.from(carDivs)
+
         .filter((div) => {
           const priceLabel = div.querySelector('div[class*="bg-[#38de7a]"]');
           const labelText = priceLabel?.textContent.replace(/\s+/g, " ").trim();
@@ -77,7 +79,7 @@ export const scrapeWithPuppeteer = async () => {
           link:
             div.querySelector("a.line-clamp-1.text-raisin-100")?.href || "N/A",
           imageUrl: div.querySelector(".items__image")?.src || "N/A",
-          priceLabel: "დაბალი ფასი",
+          priceLabel: "Low Price",
         }));
     });
 
