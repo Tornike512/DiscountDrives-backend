@@ -20,42 +20,25 @@ app.get("/filter-cars", async (req, res) => {
   try {
     const { manufacturer, model, year, price } = req.query;
 
-    const cars = await carModel.find({});
+    const filter = {};
 
-    const filterCars = cars.filter((car) => {
-      const manufacturerTerm = manufacturer ? manufacturer.toLowerCase() : "";
-      const modelTerm = model ? model.toLowerCase() : "";
-      const yearTerm = year ? year.toLowerCase() : "";
-      const priceTerm = price ? price.toLowerCase() : "";
+    if (manufacturer && model) {
+      filter.carModel = `${manufacturer} ${model}`;
+    } else if (manufacturer) {
+      filter.carModel = new RegExp(manufacturer, "i");
+    }
 
-      const carModelLower = car.carModel ? car.carModel.toLowerCase() : "";
-      const carYearLower = car.carYear ? String(car.carYear).toLowerCase() : "";
-      const carPriceLower = car.carPrice
-        ? String(car.carPrice).toLowerCase()
-        : "";
+    if (year) {
+      filter.carYear = `${year} y`;
+    }
 
-      const modelMatch =
-        manufacturer && model
-          ? carModelLower.includes(`${manufacturerTerm} ${modelTerm}`)
-          : false;
+    if (price) {
+      filter.carPrice = { $lte: Number(price.replace(",", "")) };
+    }
 
-      const manuOnlyMatch =
-        manufacturer && !model
-          ? carModelLower.includes(manufacturerTerm)
-          : false;
+    const cars = await carModel.find(filter);
 
-      const modelOnlyMatch =
-        !manufacturer && model ? carModelLower.includes(modelTerm) : false;
-
-      const yearMatch = year ? carYearLower.includes(yearTerm) : false;
-      const priceMatch = price ? carPriceLower.includes(priceTerm) : false;
-
-      return (
-        modelMatch || manuOnlyMatch || modelOnlyMatch || yearMatch || priceMatch
-      );
-    });
-
-    res.json({ cars: filterCars });
+    res.json({ cars });
   } catch (error) {
     console.error("Error filtering cars:", error);
     res.status(500).json({ error: "Failed to filter cars" });
