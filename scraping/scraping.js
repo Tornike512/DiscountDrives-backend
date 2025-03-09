@@ -70,12 +70,15 @@ export const scrapeWithPuppeteer = async () => {
             div.querySelector(".line-clamp-1.text-raisin-100")?.innerText ||
             "N/A",
           price:
-            div.querySelector(".flex.items-center.undefined")?.innerText ||
-            "N/A",
+            div
+              .querySelector(".flex.items-center.undefined")
+              ?.innerText.replace(",", "") || "N/A",
           year:
-            div.querySelector(
-              ".mr-\\[8px\\].ml-\\[0px\\].md\\:ml-\\[8px\\].flex.text-\\[\\#8996ae\\].font-medium.whitespace-nowrap"
-            )?.innerText || "N/A",
+            div
+              .querySelector(
+                ".mr-\\[8px\\].ml-\\[0px\\].md\\:ml-\\[8px\\].flex.text-\\[\\#8996ae\\].font-medium.whitespace-nowrap"
+              )
+              ?.innerText.replace("y", "") || "N/A",
           link:
             div.querySelector("a.line-clamp-1.text-raisin-100")?.href || "N/A",
           imageUrl: div.querySelector(".items__image")?.src || "N/A",
@@ -87,8 +90,8 @@ export const scrapeWithPuppeteer = async () => {
 
     const formattedCars = cars.map((car) => ({
       carModel: car.title,
-      carPrice: car.price,
-      carYear: car.year,
+      carPrice: Number(car.price),
+      carYear: Number(car.year.trim()),
       carLink: car.link,
       carImage: car.imageUrl,
     }));

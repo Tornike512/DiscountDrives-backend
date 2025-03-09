@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import carPricesModel from "./Models/carPricesModel.js";
 import carModel from "./Models/carModel.js";
+import filterCars from "./utils/filterCars.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,25 +19,12 @@ app.use(router);
 
 app.get("/filter-cars", async (req, res) => {
   try {
-    const { manufacturer, model, year, price } = req.query;
+    const { manufacturer, model, min_year, max_year, min_price, max_price } =
+      req.query;
 
-    const filter = {};
-
-    if (manufacturer && model) {
-      filter.carModel = `${manufacturer} ${model}`;
-    } else if (manufacturer) {
-      filter.carModel = new RegExp(manufacturer, "i");
-    }
-
-    if (year) {
-      filter.carYear = `${year} y`;
-    }
-
-    if (price) {
-      filter.carPrice = { $lte: Number(price.replace(",", "")) };
-    }
-
-    const cars = await carModel.find(filter);
+    const cars = await carModel.find(
+      filterCars(manufacturer, model, min_year, max_year, min_price, max_price)
+    );
 
     res.json({ cars });
   } catch (error) {
