@@ -5,7 +5,6 @@ import { scrapeWithPuppeteer } from "./scraping/scraping.js";
 import router from "./Routes/CarsRoute.js";
 import mongoose from "mongoose";
 import cors from "cors";
-import carPricesModel from "./Models/carPricesModel.js";
 import carModel from "./Models/carModel.js";
 import filterCars from "./utils/filterCars.js";
 
@@ -19,12 +18,29 @@ app.use(router);
 
 app.get("/filter-cars", async (req, res) => {
   try {
-    const { manufacturer, model, min_year, max_year, min_price, max_price } =
-      req.query;
+    const {
+      manufacturer,
+      model,
+      min_year,
+      max_year,
+      min_price,
+      max_price,
+      next_page,
+    } = req.query;
 
-    const cars = await carModel.find(
-      filterCars(manufacturer, model, min_year, max_year, min_price, max_price)
-    );
+    const cars = await carModel
+      .find(
+        filterCars(
+          manufacturer,
+          model,
+          min_year,
+          max_year,
+          min_price,
+          max_price
+        )
+      )
+      .skip(next_page)
+      .limit(20);
 
     res.json({ cars });
   } catch (error) {
@@ -32,6 +48,7 @@ app.get("/filter-cars", async (req, res) => {
     res.status(500).json({ error: "Failed to filter cars" });
   }
 });
+
 // app.get("/all-cars", async (req, res) => {
 //   try {
 //     const cars = await carPricesModel.find({});
