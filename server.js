@@ -16,39 +16,6 @@ app.use(cors());
 
 app.use(router);
 
-app.get("/filter-cars", async (req, res) => {
-  try {
-    const {
-      manufacturer,
-      model,
-      min_year,
-      max_year,
-      min_price,
-      max_price,
-      next_page,
-    } = req.query;
-
-    const cars = await carModel
-      .find(
-        filterCars(
-          manufacturer,
-          model,
-          min_year,
-          max_year,
-          min_price,
-          max_price
-        )
-      )
-      .skip(next_page)
-      .limit(20);
-
-    res.json({ cars });
-  } catch (error) {
-    console.error("Error filtering cars:", error);
-    res.status(500).json({ error: "Failed to filter cars" });
-  }
-});
-
 // app.get("/all-cars", async (req, res) => {
 //   try {
 //     const cars = await carPricesModel.find({});
