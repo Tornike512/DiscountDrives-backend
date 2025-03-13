@@ -5,8 +5,6 @@ import { scrapeWithPuppeteer } from "./scraping/scraping.js";
 import router from "./Routes/CarsRoute.js";
 import mongoose from "mongoose";
 import cors from "cors";
-import carModel from "./Models/carModel.js";
-import filterCars from "./utils/filterCars.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;

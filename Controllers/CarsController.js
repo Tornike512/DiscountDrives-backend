@@ -1,4 +1,5 @@
 import carModel from "../Models/carModel.js";
+import filterCars from "../utils/filterCars.js";
 
 export const sendCarsData = async (req, res) => {
   try {
